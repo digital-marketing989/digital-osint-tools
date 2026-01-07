@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSeek OSINT Platform KRISHNA DAS | Legal Cybersecurity Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #00cc6a;
+            --dark: #0a0f1e;
+            --darker: #060913;
+            --light: #f0f0f0;
+            --gray: #2a2f3d;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --info: #2ed573;
+            --matrix: #00ff41;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 5% 10%, rgba(0, 255, 136, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 95% 90%, rgba(0, 255, 136, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.02) 0%, transparent 30%);
+        }
+        
+        /* Matrix Rain Container */
+        #matrix-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, rgba(10, 15, 30, 0.98) 0%, rgba(6, 9, 19, 0.95) 100%);
+            border-bottom: 1px solid var(--primary);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        
+        .logo-icon {
+            font-size: 2.2rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.5));
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.5)); }
+            50% { filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.8)); }
+        }
+        
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .logo-text p {
+            font-size: 0.85rem;
+            color: #8899aa;
+            margin-top: 0.3rem;
+            letter-spacing: 1px;
+        }
+        
+        .datetime-container {
+            text-align: right;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        #datetime {
+            font-size: 1.1rem;
+            color: var(--primary);
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+            letter-spacing: 1px;
+            background: rgba(0, 20, 10, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        /* Main Container */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(6, 9, 19, 0.9);
+            border-right: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .user-info {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            text-align: center;
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--darker));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+        
+        .user-avatar i {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .user-info h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .user-info p {
+            color: #8899aa;
+            font-size: 0.85rem;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .logout-container {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 71, 87, 0.2);
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.3);
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .page-header {
+            margin-bottom: 2.5rem;
+        }
+        
+        .page-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .page-header h2 i {
+            font-size: 1.8rem;
+        }
+        
+        .page-header p {
+            color: #8899aa;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tool-card {
+            background: linear-gradient(145deg, rgba(15, 20, 35, 0.9), rgba(10, 15, 30, 0.9));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 1.8rem;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.7s;
+        }
+        
+        .tool-card:hover::before {
+            left: 100%;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .tool-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+        
+        .tool-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--light);
+            margin-bottom: 0.8rem;
+        }
+        
+        .tool-card p {
+            color: #a0aec0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            min-height: 70px;
+        }
+        
+        .tool-input {
+            margin-top: 1.2rem;
+            display: none;
+        }
+        
+        .tool-input input, .tool-input textarea, .tool-input select {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(6, 9, 19, 0.7);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+            color: var(--light);
+            font-family: 'Roboto Mono', monospace;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .tool-input input:focus, .tool-input textarea:focus, .tool-input select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+        
+        .tool-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--darker);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        
+        .tool-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+        
+        /* Camera Tool Specific */
+        .camera-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .camera-feed {
+            width: 100%;
+            height: 300px;
+            background: rgba(6, 9, 19, 0.9);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 2px dashed rgba(0, 255, 136, 0.3);
+        }
+        
+        .camera-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .camera-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .camera-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+        
+        .camera-btn.danger {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border-color: rgba(255, 71, 87, 0.3);
+        }
+        
+        .camera-btn.danger:hover {
+            background: rgba(255, 71, 87, 0.2);
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
+        }
+        
+        /* Results Section */
+        .results-section {
+            background: linear-gradient(145deg, rgba(15, 20, 35, 0.9), rgba(10, 15, 30, 0.9));
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            display: none;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+        }
+        
+        .results-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .clear-results {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .clear-results:hover {
+            background: rgba(255, 71, 87, 0.2);
+        }
+        
+        .results-content {
+            color: #a0aec0;
+            line-height: 1.7;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+        
+        .result-item {
+            background: rgba(6, 9, 19, 0.5);
+            border-left: 3px solid var(--primary);
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .result-item h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* Admin Panel */
+        .admin-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+        }
+        
+        .admin-tool-card {
+            background: linear-gradient(145deg, rgba(30, 15, 30, 0.9), rgba(20, 10, 20, 0.9));
+            border: 1px solid rgba(255, 0, 128, 0.2);
+            border-radius: 8px;
+            padding: 1.8rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .admin-tool-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 0, 128, 0.5);
+            box-shadow: 0 10px 20px rgba(255, 0, 128, 0.1);
+        }
+        
+        .admin-tool-card i {
+            font-size: 2.5rem;
+            color: #ff0080;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-tool-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ff0080;
+            margin-bottom: 0.8rem;
+        }
+        
+        .admin-tool-card p {
+            color: #c0a0c0;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-btn {
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 0, 128, 0.1);
+            color: #ff0080;
+            border: 1px solid rgba(255, 0, 128, 0.3);
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .admin-btn:hover {
+            background: rgba(255, 0, 128, 0.2);
+            box-shadow: 0 0 10px rgba(255, 0, 128, 0.2);
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(180deg, rgba(6, 9, 19, 0.95) 0%, rgba(10, 15, 30, 0.98) 100%);
+            border-top: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .legal-notice {
+            color: #8899aa;
+            font-size: 0.9rem;
+            max-width: 500px;
+            text-align: left;
+        }
+        
+        .telegram-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.7rem 1.2rem;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .telegram-contact:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+        
+        .copyright {
+            color: #8899aa;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            width: 100%;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                padding: 1rem;
+                border-right: none;
+                border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            }
+            
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                border-bottom: none;
+                padding: 0;
+                margin-right: 2rem;
+            }
+            
+            .user-avatar {
+                width: 50px;
+                height: 50px;
+                margin: 0;
+            }
+            
+            .nav-menu {
+                display: flex;
+                padding: 0;
+                flex: 1;
+                justify-content: space-around;
+            }
+            
+            .nav-item {
+                flex-direction: column;
+                padding: 0.5rem;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                margin-bottom: 0;
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            
+            .nav-item:hover, .nav-item.active {
+                border-left: none;
+                border-bottom: 3px solid var(--primary);
+            }
+            
+            .nav-item i {
+                margin-right: 0;
+                margin-bottom: 0.3rem;
+                font-size: 1.2rem;
+            }
+            
+            .logout-container {
+                padding: 0;
+                border-top: none;
+            }
+            
+            .logout-btn {
+                padding: 0.7rem 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .datetime-container {
+                text-align: center;
+            }
+            
+            .tools-grid, .admin-tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .legal-notice {
+                text-align: center;
+            }
+            
+            .sidebar {
+                overflow-x: auto;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(6, 9, 19, 0.8);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Background -->
+    <div id="matrix-container">
+        <canvas id="matrix-canvas"></canvas>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="logo-text">
+                <h1>CyberSeek OSINT Platform / KRISHNA DAS</h1>
+                <p>LEGAL CYBERSECURITY & OSINT TOOLS |  ALL INDIA HACKING ZONE ,ODISHA, INDIA</p>
+            </div>
+        </div>
+        <div class="datetime-container">
+            <div id="datetime">LOADING...</div>
+        </div>
+    </header>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div>
+                    <h3>ADMIN</h3>
+                    <p>Authorized User</p>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="osint-tools">
+                    <i class="fas fa-search"></i>
+                    <span>OSINT Tools</span>
+                </a>
+                <a href="#" class="nav-item" data-page="network-tools">
+                    <i class="fas fa-network-wired"></i>
+                    <span>Network Tools</span>
+                </a>
+                <a href="#" class="nav-item" data-page="camera-tools">
+                    <i class="fas fa-camera"></i>
+                    <span>Camera Security</span>
+                </a>
+                <a href="#" class="nav-item" data-page="admin-tools">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admin Tools</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+            
+            <div class="logout-container">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Dashboard Page -->
+            <section class="page active" id="dashboard">
+                <div class="page-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> System Dashboard</h2>
+                    <p>Welcome to CyberSeek OSINT Platform. Monitor system status, recent activities, and quick access to essential tools. ETHICAL HACKER </p>
+                </div>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3>System Status</h3>
+                        <p>All systems operational. Last security scan: 2 hours ago. No threats detected.</p>
+                        <div class="status-indicators">
+                            <p><span style="color:var(--primary)">●</span> API Connections: Active</p>
+                            <p><span style="color:var(--primary)">●</span> Database: Online</p>
+                            <p><span style="color:var(--primary)">●</span> Security Protocols: Enabled</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3>Recent Activities</h3>
+                        <p>Track your recent OSINT searches and tool usage.</p>
+                        <div class="activity-log">
+                            <p><small>• IP Lookup: 103.215.212.120</small></p>
+                            <p><small>• Phone Analysis: +91-9876543210</small></p>
+                            <p><small>• Network Scan: 192.168.1.0/24</small></p>
+                            <p><small>• Email Verification: test@example.com</small></p>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Quick Actions</h3>
+                        <p>Perform common tasks quickly from the dashboard.</p>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem;">
+                            <button class="tool-btn" onclick="showPage('osint-tools')">OSINT Lookup</button>
+                            <button class="tool-btn" onclick="showPage('network-tools')">Network Scan</button>
+                            <button class="tool-btn" onclick="showPage('camera-tools')">Camera Test</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-section" id="dashboard-results">
+                    <div class="results-header">
+                        <h3><i class="fas fa-chart-line"></i> Usage Statistics</h3>
+                        <button class="clear-results" onclick="clearResults('dashboard-results')">Refresh</button>
+                    </div>
+                    <div class="results-content">
+                        <div class="result-item">
+                            <h4>Daily Activity</h4>
+                            <p>• Tools used today: 12</p>
+                            <p>• Searches performed: 47</p>
+                            <p>• Threat detections: 0</p>
+                            <p>• Data processed: 2.3 GB</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>System Health</h4>
+                            <p>• CPU Usage: 24%</p>
+                            <p>• Memory: 67% (8.1/12 GB)</p>
+                            <p>• Storage: 42% (210/500 GB)</p>
+                            <p>• Network: 125 MB/s incoming</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- OSINT Tools Page -->
+            <section class="page" id="osint-tools">
+                <div class="page-header">
+                    <h2><i class="fas fa-search"></i> OSINT Lookup Tools</h2>
+                    <p>Open Source Intelligence gathering tools for legal security research and information verification.</p>
+                </div>
+                
+                <div class="tools-grid">
+                    <!-- Phone Lookup -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3>Phone Number Lookup</h3>
+                        <p>Trace phone numbers, identify carriers, and verify ownership information (legal use only).</p>
+                        <button class="tool-btn" onclick="toggleInput('phone-input')">Activate Tool</button>
+                        <div class="tool-input" id="phone-input">
+                            <input type="text" id="phone-number" placeholder="Enter phone number with country code (+91XXXXXXXXXX)">
+                            <button class="tool-btn" onclick="searchPhone()">Initiate Trace</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Email Lookup -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email Analysis</h3>
+                        <p>Analyze email addresses for breach data, domain information, and associated accounts.</p>
+                        <button class="tool-btn" onclick="toggleInput('email-input')">Activate Tool</button>
+                        <div class="tool-input" id="email-input">
+                            <input type="email" id="email-address" placeholder="Enter email address to analyze">
+                            <button class="tool-btn" onclick="searchEmail()">Analyze Email</button>
+                        </div>
+                    </div>
+                    
+                    <!-- IP Lookup -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>IP Geolocation</h3>
+                        <p>Geolocate IP addresses, identify ISPs, and check for known malicious activity.</p>
+                        <button class="tool-btn" onclick="toggleInput('ip-input')">Activate Tool</button>
+                        <div class="tool-input" id="ip-input">
+                            <input type="text" id="ip-address" placeholder="Enter IP address (e.g., 8.8.8.8)">
+                            <button class="tool-btn" onclick="searchIP()">Geolocate IP</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Vehicle Lookup -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3>Vehicle Information</h3>
+                        <p>Check vehicle registration details and owner information (with legal authorization).</p>
+                        <button class="tool-btn" onclick="toggleInput('vehicle-input')">Activate Tool</button>
+                        <div class="tool-input" id="vehicle-input">
+                            <input type="text" id="vehicle-number" placeholder="Enter vehicle registration number">
+                            <button class="tool-btn" onclick="searchVehicle()">Check Vehicle</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Location Tracking -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Location Tracking</h3>
+                        <p>Track locations using coordinates or phone signals (requires legal authorization).</p>
+                        <button class="tool-btn" onclick="toggleInput('location-input')">Activate Tool</button>
+                        <div class="tool-input" id="location-input">
+                            <input type="text" id="location-data" placeholder="Coordinates or phone number">
+                            <button class="tool-btn" onclick="searchLocation()">Track Location</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Username Search -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Username Search</h3>
+                        <p>Search for usernames across multiple platforms and social media networks.</p>
+                        <button class="tool-btn" onclick="toggleInput('username-input')">Activate Tool</button>
+                        <div class="tool-input" id="username-input">
+                            <input type="text" id="username" placeholder="Enter username to search">
+                            <button class="tool-btn" onclick="searchUsername()">Search Username</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-section" id="osint-results">
+                    <div class="results-header">
+                        <h3><i class="fas fa-search"></i> OSINT Results</h3>
+                        <button class="clear-results" onclick="clearResults('osint-results')">Clear Results</button>
+                    </div>
+                    <div class="results-content" id="osint-results-content">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Network Tools Page -->
+            <section class="page" id="network-tools">
+                <div class="page-header">
+                    <h2><i class="fas fa-network-wired"></i> Network Security Tools</h2>
+                    <p>Network analysis and security assessment tools for authorized penetration testing.</p>
+                </div>
+                
+                <div class="tools-grid">
+                    <!-- Port Scanner -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h3>Port Scanner</h3>
+                        <p>Scan network ports to identify open services and potential vulnerabilities.</p>
+                        <button class="tool-btn" onclick="toggleInput('port-input')">Activate Tool</button>
+                        <div class="tool-input" id="port-input">
+                            <input type="text" id="port-target" placeholder="Target IP or hostname">
+                            <input type="text" id="port-range" placeholder="Port range (e.g., 1-1000)">
+                            <button class="tool-btn" onclick="scanPorts()">Scan Ports</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Ping Tool -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-satellite"></i>
+                        </div>
+                        <h3>Ping & Traceroute</h3>
+                        <p>Check network connectivity and trace the route to a target host.</p>
+                        <button class="tool-btn" onclick="toggleInput('ping-input')">Activate Tool</button>
+                        <div class="tool-input" id="ping-input">
+                            <input type="text" id="ping-target" placeholder="Target host or IP">
+                            <button class="tool-btn" onclick="pingHost()">Ping Host</button>
+                            <button class="tool-btn" onclick="traceRoute()">Traceroute</button>
+                        </div>
+                    </div>
+                    
+                    <!-- DNS Lookup -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3>DNS Lookup</h3>
+                        <p>Query DNS records to find IP addresses, mail servers, and domain information.</p>
+                        <button class="tool-btn" onclick="toggleInput('dns-input')">Activate Tool</button>
+                        <div class="tool-input" id="dns-input">
+                            <input type="text" id="dns-domain" placeholder="Domain name (e.g., example.com)">
+                            <select id="dns-type">
+                                <option value="A">A Record</option>
+                                <option value="AAAA">AAAA Record</option>
+                                <option value="MX">MX Record</option>
+                                <option value="NS">NS Record</option>
+                                <option value="TXT">TXT Record</option>
+                            </select>
+                            <button class="tool-btn" onclick="dnsLookup()">DNS Lookup</button>
+                        </div>
+                    </div>
+                    
+                    <!-- WHOIS Lookup -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h3>WHOIS Lookup</h3>
+                        <p>Retrieve domain registration information including owner, dates, and contact.</p>
+                        <button class="tool-btn" onclick="toggleInput('whois-input')">Activate Tool</button>
+                        <div class="tool-input" id="whois-input">
+                            <input type="text" id="whois-domain" placeholder="Domain name for WHOIS">
+                            <button class="tool-btn" onclick="whoisLookup()">WHOIS Lookup</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Subdomain Scanner -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h3>Subdomain Scanner</h3>
+                        <p>Discover subdomains associated with a main domain for security assessment.</p>
+                        <button class="tool-btn" onclick="toggleInput('subdomain-input')">Activate Tool</button>
+                        <div class="tool-input" id="subdomain-input">
+                            <input type="text" id="subdomain-target" placeholder="Main domain (e.g., example.com)">
+                            <button class="tool-btn" onclick="scanSubdomains()">Scan Subdomains</button>
+                        </div>
+                    </div>
+                    
+                    <!-- HTTP Header Analyzer -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>HTTP Header Analyzer</h3>
+                        <p>Analyze HTTP headers for security configurations and potential vulnerabilities.</p>
+                        <button class="tool-btn" onclick="toggleInput('http-input')">Activate Tool</button>
+                        <div class="tool-input" id="http-input">
+                            <input type="text" id="http-url" placeholder="URL (e.g., https://example.com)">
+                            <button class="tool-btn" onclick="analyzeHeaders()">Analyze Headers</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-section" id="network-results">
+                    <div class="results-header">
+                        <h3><i class="fas fa-network-wired"></i> Network Results</h3>
+                        <button class="clear-results" onclick="clearResults('network-results')">Clear Results</button>
+                    </div>
+                    <div class="results-content" id="network-results-content">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Camera Tools Page -->
+            <section class="page" id="camera-tools">
+                <div class="page-header">
+                    <h2><i class="fas fa-camera"></i> Camera Security Tools</h2>
+                    <p>Camera testing and security assessment tools (for authorized devices only).</p>
+                    <p style="color: var(--warning); margin-top: 10px;"><i class="fas fa-exclamation-triangle"></i> WARNING: Only use on devices you own or have explicit permission to test.</p>
+                </div>
+                
+                <div class="tools-grid">
+                    <!-- Camera Access Tool -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h3>Camera Access Test</h3>
+                        <p>Test camera functionality and access permissions on your current device.</p>
+                        <button class="tool-btn" onclick="toggleInput('camera-access-input')">Activate Tool</button>
+                        <div class="tool-input" id="camera-access-input">
+                            <div class="camera-container">
+                                <div class="camera-feed" id="camera-feed">
+                                    <div style="text-align: center;">
+                                        <i class="fas fa-camera" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                                        <p>Camera feed will appear here</p>
+                                    </div>
+                                </div>
+                                <div class="camera-controls">
+                                    <button class="camera-btn" onclick="startCamera()">
+                                        <i class="fas fa-play"></i> Start Camera
+                                    </button>
+                                    <button class="camera-btn" onclick="captureImage()">
+                                        <i class="fas fa-camera-retro"></i> Capture Image
+                                    </button>
+                                    <button class="camera-btn danger" onclick="stopCamera()">
+                                        <i class="fas fa-stop"></i> Stop Camera
+                                    </button>
+                                </div>
+                            </div>
+                            <p style="color: #8899aa; font-size: 0.9rem; margin-top: 1rem; text-align: center;">
+                                <i class="fas fa-info-circle"></i> This tool only accesses your local device camera with your permission.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Camera Security Scanner -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Camera Security Scan</h3>
+                        <p>Scan for unauthorized camera access and check device permissions.</p>
+                        <button class="tool-btn" onclick="toggleInput('camera-scan-input')">Activate Tool</button>
+                        <div class="tool-input" id="camera-scan-input">
+                            <select id="camera-scan-type">
+                                <option value="permissions">Check Camera Permissions</option>
+                                <option value="vulnerabilities">Scan for Vulnerabilities</option>
+                                <option value="access_logs">Review Access Logs</option>
+                            </select>
+                            <button class="tool-btn" onclick="scanCameraSecurity()">Run Security Scan</button>
+                        </div>
+                    </div>
+                    
+                    <!-- IP Camera Finder -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <h3>IP Camera Finder</h3>
+                        <p>Discover IP cameras on your local network (authorized devices only).</p>
+                        <button class="tool-btn" onclick="toggleInput('ipcam-input')">Activate Tool</button>
+                        <div class="tool-input" id="ipcam-input">
+                            <input type="text" id="ipcam-range" placeholder="IP range (e.g., 192.168.1.0/24)">
+                            <button class="tool-btn" onclick="findIPCams()">Scan for IP Cameras</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Camera Vulnerability Check -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h3>Camera Vulnerability Check</h3>
+                        <p>Check for known vulnerabilities in camera models and firmware.</p>
+                        <button class="tool-btn" onclick="toggleInput('camera-vuln-input')">Activate Tool</button>
+                        <div class="tool-input" id="camera-vuln-input">
+                            <input type="text" id="camera-model" placeholder="Camera model/brand">
+                            <button class="tool-btn" onclick="checkCameraVulnerabilities()">Check Vulnerabilities</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-section" id="camera-results">
+                    <div class="results-header">
+                        <h3><i class="fas fa-camera"></i> Camera Tool Results</h3>
+                        <button class="clear-results" onclick="clearResults('camera-results')">Clear Results</button>
+                    </div>
+                    <div class="results-content" id="camera-results-content">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Admin Tools Page -->
+            <section class="page" id="admin-tools">
+                <div class="page-header">
+                    <h2><i class="fas fa-user-shield"></i> Advanced Security Tools</h2>
+                    <p>Advanced cybersecurity tools for authorized penetration testing and security assessment.</p>
+                    <p style="color: var(--warning); margin-top: 10px;"><i class="fas fa-exclamation-triangle"></i> FOR AUTHORIZED SECURITY TESTING ONLY. Use only on systems you own or have permission to test.</p>
+                </div>
+                
+                <div class="admin-tools-grid">
+                    <!-- Vulnerability Scanner -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-shield-virus"></i>
+                        <h3>Vulnerability Scanner</h3>
+                        <p>Scan systems for known vulnerabilities and security weaknesses.</p>
+                        <button class="admin-btn" onclick="runTool('vulnerability-scanner')">Launch Scanner</button>
+                    </div>
+                    
+                    <!-- Password Auditor -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-key"></i>
+                        <h3>Password Auditor</h3>
+                        <p>Test password strength and check for compromised credentials.</p>
+                        <button class="admin-btn" onclick="runTool('password-auditor')">Run Auditor</button>
+                    </div>
+                    
+                    <!-- SQL Injection Tester -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-database"></i>
+                        <h3>SQL Injection Tester</h3>
+                        <p>Test web applications for SQL injection vulnerabilities.</p>
+                        <button class="admin-btn" onclick="runTool('sql-tester')">Launch Tester</button>
+                    </div>
+                    
+                    <!-- XSS Scanner -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-code"></i>
+                        <h3>XSS Scanner</h3>
+                        <p>Scan for Cross-Site Scripting vulnerabilities in web applications.</p>
+                        <button class="admin-btn" onclick="runTool('xss-scanner')">Launch Scanner</button>
+                    </div>
+                    
+                    <!-- Network Sniffer -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-wifi"></i>
+                        <h3>Network Sniffer</h3>
+                        <p>Capture and analyze network traffic on authorized networks.</p>
+                        <button class="admin-btn" onclick="runTool('network-sniffer')">Start Sniffer</button>
+                    </div>
+                    
+                    <!-- Forensic Analyzer -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-search"></i>
+                        <h3>Forensic Analyzer</h3>
+                        <p>Digital forensic analysis tools for incident response.</p>
+                        <button class="admin-btn" onclick="runTool('forensic-analyzer')">Launch Analyzer</button>
+                    </div>
+                    
+                    <!-- DDoS Simulator -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <h3>DDoS Simulator</h3>
+                        <p>Stress testing tool for network infrastructure (authorized use only).</p>
+                        <button class="admin-btn" onclick="runTool('ddos-simulator')">Launch Simulator</button>
+                    </div>
+                    
+                    <!-- Encryption Tools -->
+                    <div class="admin-tool-card">
+                        <i class="fas fa-lock"></i>
+                        <h3>Encryption Tools</h3>
+                        <p>Encryption, decryption, and cryptographic analysis tools.</p>
+                        <button class="admin-btn" onclick="runTool('encryption-tools')">Launch Tools</button>
+                    </div>
+                </div>
+                
+                <div class="results-section" id="admin-results">
+                    <div class="results-header">
+                        <h3><i class="fas fa-tools"></i> Advanced Tool Results</h3>
+                        <button class="clear-results" onclick="clearResults('admin-results')">Clear Results</button>
+                    </div>
+                    <div class="results-content" id="admin-results-content">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings Page -->
+            <section class="page" id="settings">
+                <div class="page-header">
+                    <h2><i class="fas fa-cog"></i> System Settings</h2>
+                    <p>Configure platform settings, preferences, and security options.</p>
+                </div>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <h3>User Preferences</h3>
+                        <p>Customize your dashboard, theme, and notification preferences.</p>
+                        <div class="tool-input" style="display: block; margin-top: 1rem;">
+                            <label style="color: var(--primary); margin-bottom: 0.5rem; display: block;">Theme:</label>
+                            <select id="theme-select">
+                                <option value="dark">Dark Theme (Default)</option>
+                                <option value="matrix">Matrix Theme</option>
+                                <option value="blue">Blue Theme</option>
+                                <option value="purple">Purple Theme</option>
+                            </select>
+                            <button class="tool-btn" onclick="changeTheme()" style="margin-top: 1rem;">Apply Theme</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Security Settings</h3>
+                        <p>Configure security options, API keys, and access controls.</p>
+                        <div class="tool-input" style="display: block; margin-top: 1rem;">
+                            <label style="color: var(--primary); margin-bottom: 0.5rem; display: block;">Two-Factor Authentication:</label>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span>Status: <span style="color: var(--primary)">Enabled</span></span>
+                                <button class="tool-btn" style="padding: 0.5rem 1rem;">Disable</button>
+                            </div>
+                            <button class="tool-btn">Manage API Keys</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Notifications</h3>
+                        <p>Configure alerts and notifications for tool results and system events.</p>
+                        <div class="tool-input" style="display: block; margin-top: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <input type="checkbox" id="email-notifications" checked>
+                                <label for="email-notifications" style="color: var(--light); margin-left: 0.5rem;">Email Notifications</label>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <input type="checkbox" id="tool-notifications" checked>
+                                <label for="tool-notifications" style="color: var(--light); margin-left: 0.5rem;">Tool Completion Alerts</label>
+                            </div>
+                            <button class="tool-btn">Save Preferences</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="legal-notice">
+                <p><i class="fas fa-exclamation-circle"></i> <strong>🚫LEGAL DISCLAIMER:</strong> This platform is for authorized security testing and educational purposes only. Unauthorized access to computer systems is illegal. Always obtain proper authorization before testing.</p>
+            </div>
+            <a href="https://t.me/Ethicalhacker989" class="telegram-contact" target="_blank">
+                <i class="fab fa-telegram"></i>
+                <span>@Ethicalhacker989</span>
+            </a>
+        </div>
+        <div class="copyright">
+            <p>© 2026 Cybersecurity OSINT Platform |   (●ˇ∀ˇ●) ALL INDIA HACKING ZONE Bhubaneswar, Odisha, India | v5.1.4</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
+        const lettersArray = letters.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 15, 30, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff41';
+            ctx.font = `${fontSize}px 'Roboto Mono', monospace`;
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = lettersArray[Math.floor(Math.random() * lettersArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        const matrixInterval = setInterval(drawMatrix, 35);
+        
+        // Update canvas on resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Real-time date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Kolkata'
+            };
+            const dateTimeStr = now.toLocaleDateString('en-IN', options) + ' | IST';
+            document.getElementById('datetime').textContent = dateTimeStr;
+        }
+        
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+        
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('data-page');
+                showPage(pageId);
+                
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Hide all tool inputs when switching pages
+            document.querySelectorAll('.tool-input').forEach(input => {
+                input.style.display = 'none';
+            });
+            
+            // Show dashboard results by default
+            if (pageId === 'dashboard') {
+                document.getElementById('dashboard-results').style.display = 'block';
+            } else {
+                document.getElementById('dashboard-results').style.display = 'none';
+            }
+        }
+        
+        // Toggle tool inputs
+        function toggleInput(inputId) {
+            // Hide all tool inputs first
+            document.querySelectorAll('.tool-input').forEach(input => {
+                if (input.id !== inputId) {
+                    input.style.display = 'none';
+                }
+            });
+            
+            // Toggle the clicked tool input
+            const input = document.getElementById(inputId);
+            if (input.style.display === 'block') {
+                input.style.display = 'none';
+            } else {
+                input.style.display = 'block';
+            }
+        }
+        
+        // Clear results
+        function clearResults(resultSectionId) {
+            const contentId = resultSectionId.replace('results', 'results-content');
+            document.getElementById(contentId).innerHTML = '';
+            document.getElementById(resultSectionId).style.display = 'none';
+        }
+        
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Logged out successfully. Redirecting to login...');
+                // In a real application, you would redirect to login page
+                // For demo, we'll just reload
+                location.reload();
+            }
+        });
+        
+        // Camera functionality
+        let cameraStream = null;
+        
+        function startCamera() {
+            const cameraFeed = document.getElementById('camera-feed');
+            
+            // Clear previous content
+            cameraFeed.innerHTML = '';
+            
+            // Create video element
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'cover';
+            video.style.borderRadius = '6px';
+            cameraFeed.appendChild(video);
+            
+            // Request camera access
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    cameraStream = stream;
+                    video.srcObject = stream;
+                    showResult('camera-results', `
+                        <div class="result-item">
+                            <h4><i class="fas fa-check-circle" style="color: var(--primary)"></i> Camera Access Granted</h4>
+                            <p>Camera is now active. You can see the live feed above.</p>
+                            <p><strong>Resolution:</strong> 1280x720</p>
+                            <p><strong>Frame Rate:</strong> 30 fps</p>
+                            <p><strong>Status:</strong> <span style="color: var(--primary)">Streaming</span></p>
+                        </div>
+                    `);
+                })
+                .catch(err => {
+                    cameraFeed.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;"></i>
+                            <p>Camera access denied or not available.</p>
+                            <p><small>Error: ${err.message}</small></p>
+                        </div>
+                    `;
+                    showResult('camera-results', `
+                        <div class="result-item">
+                            <h4><i class="fas fa-exclamation-triangle" style="color: var(--danger)"></i> Camera Access Denied</h4>
+                            <p>Unable to access camera. Please check permissions and ensure no other application is using the camera.</p>
+                            <p><strong>Possible reasons:</strong></p>
+                            <ul>
+                                <li>Camera permissions not granted</li>
+                                <li>Camera in use by another application</li>
+                                <li>No camera available on this device</li>
+                            </ul>
+                        </div>
+                    `);
+                });
+        }
+        
+        function captureImage() {
+            if (!cameraStream) {
+                showResult('camera-results', `
+                    <div class="result-item">
+                        <h4><i class="fas fa-exclamation-triangle" style="color: var(--danger)"></i> No Camera Active</h4>
+                        <p>Please start the camera first before capturing an image.</p>
+                    </div>
+                `);
+                return;
+            }
+            
+            const video = document.querySelector('#camera-feed video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Create download link
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = `camera-capture-${Date.now()}.png`;
+            link.href = dataUrl;
+            
+            showResult('camera-results', `
+                <div class="result-item">
+                    <h4><i class="fas fa-camera-retro" style="color: var(--primary)"></i> Image Captured Successfully</h4>
+                    <p>Image has been captured from the camera feed.</p>
+                    <p><strong>Resolution:</strong> ${canvas.width}x${canvas.height}</p>
+                    <p><strong>Format:</strong> PNG</p>
+                    <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+                    <p><a href="${dataUrl}" download="${link.download}" style="color: var(--primary); text-decoration: underline;">Click here to download the image</a></p>
+                </div>
+            `);
+        }
+        
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+                
+                const cameraFeed = document.getElementById('camera-feed');
+                cameraFeed.innerHTML = `
+                    <div style="text-align: center;">
+                        <i class="fas fa-camera" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                        <p>Camera feed will appear here</p>
+                    </div>
+                `;
+                
+                showResult('camera-results', `
+                    <div class="result-item">
+                        <h4><i class="fas fa-stop-circle" style="color: var(--danger)"></i> Camera Stopped</h4>
+                        <p>Camera stream has been stopped successfully.</p>
+                    </div>
+                `);
+            }
+        }
+        
+        // Tool functions
+        function showResult(sectionId, content) {
+            const contentId = sectionId.replace('results', 'results-content');
+            const resultsSection = document.getElementById(sectionId);
+            
+            // Add new result
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result-item';
+            resultDiv.innerHTML = content;
+            
+            document.getElementById(contentId).prepend(resultDiv);
+            resultsSection.style.display = 'block';
+        }
+        
+        // OSINT Tool Functions
+        function searchPhone() {
+            const phone = document.getElementById('phone-number').value;
+            if (!phone) {
+                alert('Please enter a phone number');
+                return;
+            }
+            
+            showResult('osint-results', `
+                <h4><i class="fas fa-phone"></i> Phone Number Analysis: ${phone}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Analysis Complete</span></p>
+                <p><strong>Country:</strong> India (+91)</p>
+                <p><strong>Carrier:</strong> Jio (Reliance Jio Infocomm Limited)</p>
+                <p><strong>Location:</strong> Bhubaneswar, Odisha</p>
+                <p><strong>Number Type:</strong> Mobile</p>
+                <p><strong>Active Since:</strong> 2021-08-15</p>
+                <p><strong>Spam Score:</strong> 2/100 (Low Risk)</p>
+                <p><strong>Associated Accounts:</strong> 3 social media profiles detected</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function searchEmail() {
+            const email = document.getElementById('email-address').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            showResult('osint-results', `
+                <h4><i class="fas fa-envelope"></i> Email Analysis: ${email}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Analysis Complete</span></p>
+                <p><strong>Domain:</strong> ${email.split('@')[1] || 'Unknown'}</p>
+                <p><strong>Breach Detection:</strong> Found in 2 data breaches (2021, 2022)</p>
+                <p><strong>Disposable Email:</strong> No</p>
+                <p><strong>MX Records:</strong> Validated</p>
+                <p><strong>Associated Accounts:</strong> LinkedIn, GitHub, Twitter</p>
+                <p><strong>Creation Date:</strong> Approximately March 2020</p>
+                <p><strong>Risk Score:</strong> 28/100 (Low Risk)</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function searchIP() {
+            const ip = document.getElementById('ip-address').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            showResult('osint-results', `
+                <h4><i class="fas fa-globe"></i> IP Geolocation: ${ip}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Geolocation Successful</span></p>
+                <p><strong>Country:</strong> India</p>
+                <p><strong>Region:</strong> Odisha</p>
+                <p><strong>City:</strong> Bhubaneswar</p>
+                <p><strong>Coordinates:</strong> 20.2961° N, 85.8245° E</p>
+                <p><strong>ISP:</strong> BSNL (Bharat Sanchar Nigam Limited)</p>
+                <p><strong>Organization:</strong> Government of Odisha</p>
+                <p><strong>Proxy/VPN Detection:</strong> None detected</p>
+                <p><strong>Threat Intelligence:</strong> No known malicious activity</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function searchVehicle() {
+            const vehicle = document.getElementById('vehicle-number').value;
+            if (!vehicle) {
+                alert('Please enter a vehicle number');
+                return;
+            }
+            
+            showResult('osint-results', `
+                <h4><i class="fas fa-car"></i> Vehicle Information: ${vehicle.toUpperCase()}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Records Found</span></p>
+                <p><strong>Vehicle Type:</strong> SUV</p>
+                <p><strong>Make/Model:</strong> Mahindra Scorpio S11</p>
+                <p><strong>Registration Date:</strong> 2022-05-18</p>
+                <p><strong>Registered City:</strong> Cuttack, Odisha</p>
+                <p><strong>Fuel Type:</strong> Diesel</p>
+                <p><strong>Insurance Status:</strong> Valid until 2024-05-17</p>
+                <p><strong>Pollution Certificate:</strong> Valid until 2024-02-28</p>
+                <p><strong>Owner Name:</strong> [REDACTED FOR PRIVACY]</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function searchLocation() {
+            const location = document.getElementById('location-data').value;
+            if (!location) {
+                alert('Please enter location data');
+                return;
+            }
+            
+            showResult('osint-results', `
+                <h4><i class="fas fa-map-marker-alt"></i> Location Tracking: ${location}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Tracking Active</span></p>
+                <p><strong>Current Location:</strong> Patia, Bhubaneswar, Odisha</p>
+                <p><strong>Coordinates:</strong> 20.3512° N, 85.8075° E</p>
+                <p><strong>Accuracy:</strong> ± 25 meters</p>
+                <p><strong>Last Updated:</strong> Just now</p>
+                <p><strong>Network:</strong> Jio 4G (Signal strength: 85%)</p>
+                <p><strong>Device:</strong> Android 13, Samsung Galaxy S21</p>
+                <p><strong>Movement:</strong> Stationary for past 15 minutes</p>
+                <p><strong>Nearby Landmarks:</strong> KIIT University, KISS, Fortune Towers</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function searchUsername() {
+            const username = document.getElementById('username').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            showResult('osint-results', `
+                <h4><i class="fas fa-user"></i> Username Search: ${username}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Search Complete</span></p>
+                <p><strong>Platforms Found:</strong></p>
+                <ul>
+                    <li><strong>Twitter:</strong> <a href="#" style="color: var(--primary)">@${username}</a> (Last active: 2 days ago)</li>
+                    <li><strong>GitHub:</strong> <a href="#" style="color: var(--primary)">github.com/${username}</a> (12 repositories)</li>
+                    <li><strong>Instagram:</strong> <a href="#" style="color: var(--primary)">instagram.com/${username}</a> (Private account)</li>
+                    <li><strong>LinkedIn:</strong> Profile found (${username} IT Professional)</li>
+                </ul>
+                <p><strong>Profile Picture Detection:</strong> Similar avatar detected on 3 platforms</p>
+                <p><strong>Account Creation:</strong> Earliest account created in 2018</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        // Network Tool Functions
+        function scanPorts() {
+            const target = document.getElementById('port-target').value;
+            const range = document.getElementById('port-range').value;
+            
+            if (!target || !range) {
+                alert('Please enter target and port range');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-plug"></i> Port Scan Results: ${target}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Scan Complete</span></p>
+                <p><strong>Target:</strong> ${target}</p>
+                <p><strong>Port Range:</strong> ${range}</p>
+                <p><strong>Open Ports Found:</strong></p>
+                <ul>
+                    <li><strong>Port 22:</strong> SSH (Open)</li>
+                    <li><strong>Port 80:</strong> HTTP (Open)</li>
+                    <li><strong>Port 443:</strong> HTTPS (Open)</li>
+                    <li><strong>Port 3306:</strong> MySQL (Closed)</li>
+                    <li><strong>Port 8080:</strong> HTTP-Alt (Open)</li>
+                </ul>
+                <p><strong>Security Recommendations:</strong></p>
+                <ul>
+                    <li>Consider closing port 8080 if not needed</li>
+                    <li>Ensure SSH is using key-based authentication</li>
+                    <li>Check HTTP services for security headers</li>
+                </ul>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function pingHost() {
+            const target = document.getElementById('ping-target').value;
+            if (!target) {
+                alert('Please enter a target host');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-satellite"></i> Ping Results: ${target}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Ping Successful</span></p>
+                <p><strong>Target:</strong> ${target}</p>
+                <p><strong>IP Address:</strong> 192.168.1.1</p>
+                <p><strong>Packets Sent:</strong> 4</p>
+                <p><strong>Packets Received:</strong> 4</p>
+                <p><strong>Packet Loss:</strong> 0%</p>
+                <p><strong>Round Trip Times:</strong></p>
+                <ul>
+                    <li>Minimum: 12ms</li>
+                    <li>Maximum: 24ms</li>
+                    <li>Average: 18ms</li>
+                </ul>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function traceRoute() {
+            const target = document.getElementById('ping-target').value;
+            if (!target) {
+                alert('Please enter a target host');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-satellite"></i> Traceroute Results: ${target}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Trace Complete</span></p>
+                <p><strong>Target:</strong> ${target}</p>
+                <p><strong>Hops:</strong> 8</p>
+                <p><strong>Route:</strong></p>
+                <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px; overflow-x: auto;">
+1   12 ms   10 ms   11 ms  192.168.1.1
+2   15 ms   14 ms   16 ms  100.64.0.1
+3   18 ms   20 ms   19 ms  172.16.10.5
+4   22 ms   21 ms   23 ms  103.215.212.1
+5   25 ms   27 ms   26 ms  14.143.12.10
+6   30 ms   32 ms   31 ms  72.14.215.100
+7   35 ms   34 ms   36 ms  216.239.48.200
+8   40 ms   38 ms   39 ms  ${target} [8.8.8.8]
+                </pre>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function dnsLookup() {
+            const domain = document.getElementById('dns-domain').value;
+            const type = document.getElementById('dns-type').value;
+            
+            if (!domain) {
+                alert('Please enter a domain name');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-server"></i> DNS Lookup Results: ${domain} (${type} Record)</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Lookup Successful</span></p>
+                <p><strong>Domain:</strong> ${domain}</p>
+                <p><strong>Record Type:</strong> ${type}</p>
+                <p><strong>Results:</strong></p>
+                <ul>
+                    <li>${type === 'A' ? '142.250.185.78' : 
+                          type === 'AAAA' ? '2404:6800:4009:82c::200e' : 
+                          type === 'MX' ? 'ASPMX.L.GOOGLE.COM (Priority: 10)' : 
+                          type === 'NS' ? 'ns1.google.com' : 
+                          'v=spf1 include:_spf.google.com ~all'}</li>
+                    ${type === 'MX' ? '<li>ALT1.ASPMX.L.GOOGLE.COM (Priority: 20)</li>' : ''}
+                    ${type === 'NS' ? '<li>ns2.google.com</li><li>ns3.google.com</li><li>ns4.google.com</li>' : ''}
+                </ul>
+                <p><strong>TTL:</strong> 300 seconds</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function whoisLookup() {
+            const domain = document.getElementById('whois-domain').value;
+            if (!domain) {
+                alert('Please enter a domain name');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-info-circle"></i> WHOIS Results: ${domain}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">WHOIS Lookup Complete</span></p>
+                <p><strong>Domain:</strong> ${domain}</p>
+                <p><strong>Registrar:</strong> GoDaddy.com, LLC</p>
+                <p><strong>Registration Date:</strong> 2020-03-15</p>
+                <p><strong>Expiration Date:</strong> 2025-03-15</p>
+                <p><strong>Updated Date:</strong> 2023-01-20</p>
+                <p><strong>Name Servers:</strong></p>
+                <ul>
+                    <li>ns1.godaddy.com</li>
+                    <li>ns2.godaddy.com</li>
+                </ul>
+                <p><strong>Registrant Contact:</strong> [REDACTED FOR PRIVACY]</p>
+                <p><strong>Admin Contact:</strong> [REDACTED FOR PRIVACY]</p>
+                <p><strong>Technical Contact:</strong> [REDACTED FOR PRIVACY]</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function scanSubdomains() {
+            const domain = document.getElementById('subdomain-target').value;
+            if (!domain) {
+                alert('Please enter a domain name');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-sitemap"></i> Subdomain Scan Results: ${domain}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Scan Complete</span></p>
+                <p><strong>Domain:</strong> ${domain}</p>
+                <p><strong>Subdomains Found:</strong> 8</p>
+                <p><strong>List of Subdomains:</strong></p>
+                <ul>
+                    <li>www.${domain}</li>
+                    <li>mail.${domain}</li>
+                    <li>blog.${domain}</li>
+                    <li>shop.${domain}</li>
+                    <li>api.${domain}</li>
+                    <li>dev.${domain}</li>
+                    <li>test.${domain}</li>
+                    <li>admin.${domain}</li>
+                </ul>
+                <p><strong>Security Note:</strong> Found 2 exposed admin panels. Consider restricting access.</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function analyzeHeaders() {
+            const url = document.getElementById('http-url').value;
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            showResult('network-results', `
+                <h4><i class="fas fa-code"></i> HTTP Header Analysis: ${url}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Analysis Complete</span></p>
+                <p><strong>URL:</strong> ${url}</p>
+                <p><strong>HTTP Headers Found:</strong></p>
+                <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 4px; overflow-x: auto;">
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Length: 15789
+Connection: keep-alive
+Server: nginx/1.18.0
+Date: ${new Date().toUTCString()}
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Content-Security-Policy: default-src 'self'
+Referrer-Policy: strict-origin-when-cross-origin
+                </pre>
+                <p><strong>Security Assessment:</strong></p>
+                <ul>
+                    <li><span style="color: var(--primary)">✓</span> HSTS header present</li>
+                    <li><span style="color: var(--primary)">✓</span> XSS protection enabled</li>
+                    <li><span style="color: var(--primary)">✓</span> Content Security Policy configured</li>
+                    <li><span style="color: var(--warning)">⚠</span> Consider adding Feature-Policy header</li>
+                </ul>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        // Camera Tool Functions
+        function scanCameraSecurity() {
+            const scanType = document.getElementById('camera-scan-type').value;
+            
+            showResult('camera-results', `
+                <h4><i class="fas fa-shield-alt"></i> Camera Security Scan: ${scanType.replace('_', ' ').toUpperCase()}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Scan Complete</span></p>
+                <p><strong>Scan Type:</strong> ${scanType}</p>
+                ${scanType === 'permissions' ? `
+                    <p><strong>Camera Permissions Status:</strong></p>
+                    <ul>
+                        <li><span style="color: var(--primary)">✓</span> Browser camera access: Granted</li>
+                        <li><span style="color: var(--primary)">✓</span> Operating system permissions: Granted</li>
+                        <li><span style="color: var(--primary)">✓</span> No suspicious background processes detected</li>
+                        <li><span style="color: var(--primary)">✓</span> Camera LED indicator: Functional</li>
+                    </ul>
+                    <p><strong>Recommendation:</strong> Camera permissions appear secure. No unauthorized access detected.</p>
+                ` : ''}
+                ${scanType === 'vulnerabilities' ? `
+                    <p><strong>Vulnerability Scan Results:</strong></p>
+                    <ul>
+                        <li><span style="color: var(--primary)">✓</span> Default credentials: Not detected</li>
+                        <li><span style="color: var(--warning)">⚠</span> Firmware version: Update available (v2.1.4 → v2.2.0)</li>
+                        <li><span style="color: var(--primary)">✓</span> Unencrypted streams: Not detected</li>
+                        <li><span style="color: var(--danger)">✗</span> UPnP enabled: Consider disabling for security</li>
+                        <li><span style="color: var(--primary)">✓</span> Remote access: Properly secured</li>
+                    </ul>
+                    <p><strong>Recommendation:</strong> Update firmware and disable UPnP for improved security.</p>
+                ` : ''}
+                ${scanType === 'access_logs' ? `
+                    <p><strong>Camera Access Logs:</strong></p>
+                    <ul>
+                        <li><strong>2023-10-15 14:30:</strong> Authorized user access (You)</li>
+                        <li><strong>2023-10-15 10:22:</strong> System check (Automatic)</li>
+                        <li><strong>2023-10-14 19:15:</strong> Firmware update check</li>
+                        <li><strong>2023-10-13 08:45:</strong> Motion detection triggered</li>
+                        <li><strong>2023-10-12 22:10:</strong> Night vision enabled</li>
+                    </ul>
+                    <p><strong>Security Status:</strong> No unauthorized access attempts detected in logs.</p>
+                ` : ''}
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function findIPCams() {
+            const ipRange = document.getElementById('ipcam-range').value || '192.168.1.0/24';
+            
+            showResult('camera-results', `
+                <h4><i class="fas fa-wifi"></i> IP Camera Discovery: ${ipRange}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Scan Complete</span></p>
+                <p><strong>IP Range:</strong> ${ipRange}</p>
+                <p><strong>Devices Found:</strong> 3 IP cameras detected</p>
+                <p><strong>Discovered Cameras:</strong></p>
+                <ul>
+                    <li><strong>192.168.1.101:</strong> D-Link DCS-933L (Front Door)</li>
+                    <li><strong>192.168.1.102:</strong> TP-Link Tapo C200 (Living Room)</li>
+                    <li><strong>192.168.1.103:</strong> Xiaomi Mi Home Security Camera (Backyard)</li>
+                </ul>
+                <p><strong>Security Status:</strong></p>
+                <ul>
+                    <li><span style="color: var(--primary)">✓</span> All cameras require authentication</li>
+                    <li><span style="color: var(--warning)">⚠</span> One camera using default HTTP port (80)</li>
+                    <li><span style="color: var(--primary)">✓</span> No open RTSP streams detected</li>
+                </ul>
+                <p><strong>Recommendation:</strong> Change default HTTP port on camera at 192.168.1.101 to enhance security.</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        function checkCameraVulnerabilities() {
+            const model = document.getElementById('camera-model').value || 'Generic IP Camera';
+            
+            showResult('camera-results', `
+                <h4><i class="fas fa-bug"></i> Camera Vulnerability Check: ${model}</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Vulnerability Assessment Complete</span></p>
+                <p><strong>Camera Model:</strong> ${model}</p>
+                <p><strong>Known Vulnerabilities:</strong> 2 critical, 1 medium</p>
+                <p><strong>Critical Vulnerabilities:</strong></p>
+                <ul>
+                    <li><strong>CVE-2021-36260:</strong> Command injection vulnerability in Hikvision cameras</li>
+                    <li><strong>CVE-2020-25067:</strong> Unauthenticated RTSP stream access in D-Link cameras</li>
+                </ul>
+                <p><strong>Medium Vulnerability:</strong></p>
+                <ul>
+                    <li><strong>CVE-2019-11219:</strong> Buffer overflow in camera web interface</li>
+                </ul>
+                <p><strong>Patches Available:</strong></p>
+                <ul>
+                    <li>Firmware update v2.2.1 addresses CVE-2021-36260</li>
+                    <li>Security patch v1.0.5 fixes CVE-2020-25067</li>
+                </ul>
+                <p><strong>Recommendation:</strong> Update camera firmware immediately to latest version and disable UPnP.</p>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        // Admin Tool Functions
+        function runTool(toolName) {
+            const toolNames = {
+                'vulnerability-scanner': 'Vulnerability Scanner',
+                'password-auditor': 'Password Auditor',
+                'sql-tester': 'SQL Injection Tester',
+                'xss-scanner': 'XSS Scanner',
+                'network-sniffer': 'Network Sniffer',
+                'forensic-analyzer': 'Forensic Analyzer',
+                'ddos-simulator': 'DDoS Simulator',
+                'encryption-tools': 'Encryption Tools'
+            };
+            
+            const toolResults = {
+                'vulnerability-scanner': 'Found 12 vulnerabilities (3 critical, 5 high, 4 medium). Detailed report generated.',
+                'password-auditor': 'Audited 150 passwords. 23 weak passwords detected. 5 passwords found in breach databases.',
+                'sql-tester': 'Tested 45 input fields. 2 potential SQL injection points identified. No critical vulnerabilities found.',
+                'xss-scanner': 'Scanned website for XSS vulnerabilities. 1 reflected XSS vulnerability detected in search parameter.',
+                'network-sniffer': 'Captured 12,450 packets in 5 minutes. 3 suspicious connections identified for further analysis.',
+                'forensic-analyzer': 'Analyzed disk image. Recovered 12 deleted files. Timeline analysis complete.',
+                'ddos-simulator': 'Stress test completed. System handled 10,000 requests per second. No service degradation detected.',
+                'encryption-tools': 'Generated RSA-4096 key pair. Encrypted 5 files. Hash analysis complete.'
+            };
+            
+            showResult('admin-results', `
+                <h4><i class="fas fa-tools"></i> ${toolNames[toolName]} - Execution Complete</h4>
+                <p><strong>Status:</strong> <span style="color: var(--primary)">Tool executed successfully</span></p>
+                <p><strong>Tool:</strong> ${toolNames[toolName]}</p>
+                <p><strong>Execution Time:</strong> ${Math.floor(Math.random() * 30) + 5} seconds</p>
+                <p><strong>Results:</strong> ${toolResults[toolName]}</p>
+                <p><strong>Recommendations:</strong> Review detailed report for actionable security improvements.</p>
+                <p><strong>Next Steps:</strong></p>
+                <ul>
+                    <li>Address critical vulnerabilities within 24 hours</li>
+                    <li>Update password policies based on audit results</li>
+                    <li>Schedule regular security scans</li>
+                </ul>
+                <p><small style="color: var(--gray); font-style: italic;">Note: This is demo data for educational purposes only.</small></p>
+            `);
+        }
+        
+        // Settings Functions
+        function changeTheme() {
+            const theme = document.getElementById('theme-select').value;
+            alert(`Theme changed to ${theme}. In a real application, this would update the UI theme.`);
+        }
+        
+        // Initialize dashboard results
+        document.getElementById('dashboard-results').style.display = 'block';
+        
+        // Initialize with login simulation
+        // In a real application, this would be handled by a proper authentication system
+        console.log('CyberSeek OSINT Platform initialized. Welcome, Admin.');
+    </script>
+</body>
+</html>
